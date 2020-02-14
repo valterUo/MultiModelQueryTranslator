@@ -69,11 +69,12 @@ public class LambdaFunction {
 		}
 		return result;
 	}
-	
-	public void modifyConsInLambdaFunction(String newConsFunction, Integer amountOfParametersInDomainDataModelConsFunction) {
+
+	public void modifyConsInLambdaFunction(String newConsFunction,
+			Integer amountOfParametersInDomainDataModelConsFunction) {
 		this.modifier.modifyConsInLambdaFunction(newConsFunction, amountOfParametersInDomainDataModelConsFunction);
 	}
-	
+
 	public void substituteNil(String targetInitialCollection) {
 		this.modifier.substituteNil(targetInitialCollection);
 	}

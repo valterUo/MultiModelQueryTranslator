@@ -5,18 +5,19 @@ import java.util.ArrayList;
 import com.sun.tools.javac.util.Pair;
 
 public class LambdaFunctionModifier {
-	
+
 	private ArrayList<String> variables;
 	private ArrayList<String> tokens;
-	
+
 	public LambdaFunctionModifier(ArrayList<String> tokens, ArrayList<String> variables) {
 		this.tokens = tokens;
 		this.variables = variables;
 	}
-	
+
 	public void modifyConsInLambdaFunction(String newConsFunction,
 			int amountOfParametersInDomainDataModelConsFunction) {
-		//System.out.println("New cons function: " + newConsFunction + " and amount of parameters: " + amountOfParametersInDomainDataModelConsFunction);
+		// System.out.println("New cons function: " + newConsFunction + " and amount of
+		// parameters: " + amountOfParametersInDomainDataModelConsFunction);
 		switch (newConsFunction) {
 		case ":":
 			switch (amountOfParametersInDomainDataModelConsFunction) {
@@ -59,17 +60,20 @@ public class LambdaFunctionModifier {
 	public void modifyConsInLambdaFunctionTwoParameters(String newConsFunction) {
 		for (int i = 0; i < this.tokens.size(); i++) {
 			boolean visitedIf = false;
-			if (this.tokens.get(i).trim().equals("cons") && this.tokens.get(i + 1).trim().equals(this.variables.get(0))
+			String token = this.tokens.get(i).trim();
+			if (token.equals("cons") && this.tokens.get(i + 1).trim().equals(this.variables.get(0))
 					&& this.tokens.get(i + 2).trim().equals(this.variables.get(1))) {
 				this.tokens.set(i, this.variables.get(0));
 				this.tokens.set(i + 1, newConsFunction);
 				this.tokens.set(i + 2, this.variables.get(1));
 				visitedIf = true;
-			} else if (this.tokens.get(i).trim().equals("cons") && this.tokens.get(i + 1).trim().equals("(")) {
+			} else if (token.equals("cons") && this.tokens.get(i + 1).trim().equals("(")) {
 				modifyConsFunctionFollowedByOneOrTwoParametersClosedInParantheses(i);
-			} else if(this.tokens.get(i).trim().equals("cons")) {
+				visitedIf = true;
+			} else if (token.equals("cons")) {
 				this.tokens.set(i, this.tokens.get(i + 1));
 				this.tokens.set(i + 1, newConsFunction);
+				visitedIf = true;
 			} else if (i == this.tokens.size() - 1 && visitedIf) {
 				System.out.println("Error! The cons function in the lambda function has wrong parameters. Should be "
 						+ this.variables.get(0) + " and " + this.variables.get(1));
@@ -101,15 +105,16 @@ public class LambdaFunctionModifier {
 		this.tokens.set(i, "");
 		Integer paranthesesCount = 0;
 		for (int j = i + 1; j < this.tokens.size(); j++) {
-			if (this.tokens.get(j).trim().equals(")") && paranthesesCount == 0) {
+			String token = this.tokens.get(j).trim();
+			if (token.equals(")") && paranthesesCount == 0) {
 				this.tokens.set(j, "");
 				return new Pair<String, Integer>(result + ")", j + 1);
-			} else if(this.tokens.get(j).trim().equals(")") && paranthesesCount > 0) {
+			} else if (token.equals(")") && paranthesesCount > 0) {
 				paranthesesCount--;
-			} else if (this.tokens.get(j).trim().equals("(")) {
+			} else if (token.equals("(")) {
 				paranthesesCount++;
 			}
-			result += this.tokens.get(j).trim() + " ";
+			result += token + " ";
 			this.tokens.set(j, "");
 		}
 		return null;
